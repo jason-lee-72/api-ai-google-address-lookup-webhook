@@ -3,7 +3,7 @@ let bodyParser = require('body-parser');
 let app = express();
 let port = process.env.PORT || 3000;
 
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
@@ -13,10 +13,8 @@ function lookup(req, res) {
     key: 'AIzaSyAsg_hoH1HVXONJhwUwR6f2fGZROJQwM1E'
   });
 
-console.log(JSON.stringify(req.body));
-
   googleMapsClient.geocode({
-    address: req.body.lookup
+    address: req.body.result.parameters.lookup
   }, function (err, response) {
 
     if (!err) {
@@ -35,14 +33,14 @@ app.use('/webhook', (req, res) => {
   res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
   //response = "This is a sample response from your webhook! action is " + req.body.result.action;
 
-  // switch (req.body.result.action) {
-  //   case "location.lookup":
-  lookup(req, res)
-  // }
-
-
-
-
+  switch (req.body.result.action) {
+    case "googleAddressLookup":
+      lookup(req, res);
+      break;
+    default:
+      res.status(501);
+      res.end();
+  }
 });
 
 app.use(function (req, res, next) {
