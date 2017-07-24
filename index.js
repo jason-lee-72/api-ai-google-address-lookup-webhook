@@ -13,6 +13,8 @@ function lookup(req, res) {
     key: 'AIzaSyAsg_hoH1HVXONJhwUwR6f2fGZROJQwM1E'
   });
 
+console.log(JSON.stringify(req.body));
+
   googleMapsClient.geocode({
     address: req.body.lookup
   }, function (err, response) {
