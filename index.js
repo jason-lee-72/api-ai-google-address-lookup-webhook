@@ -9,8 +9,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use('/webhook', (req, res) => {
-  req.params.action
-  response = "This is a sample response from your webhook! action is " + req.params.action;
+  response = "This is a sample response from your webhook! action is " + req.body.result.action;
 
 
   res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
