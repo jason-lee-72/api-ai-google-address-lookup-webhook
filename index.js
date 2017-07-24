@@ -8,8 +8,10 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 
-app.use('/helloworld', (req, res) => {
-  response = "This is a sample response from your webhook!" //Default response from the webhook to show it's working
+app.use('/webhook', (req, res) => {
+  req.params.action
+  response = "This is a sample response from your webhook! action is " + req.params.action;
+
 
   res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
   res.send(JSON.stringify({
