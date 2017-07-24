@@ -3,7 +3,7 @@ let bodyParser = require('body-parser');
 let app = express();
 let port = process.env.PORT || 3000;
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
@@ -14,7 +14,7 @@ function lookup(req, res) {
   });
 
   googleMapsClient.geocode({
-    address: req.query.lookup
+    address: req.body.lookup
   }, function (err, response) {
 
     if (!err) {
@@ -24,7 +24,7 @@ function lookup(req, res) {
       });
     } else {
        res.status(500);
-       res.send(JSON.stringify(err));
+       res.send(err.json.error_message);
     }
   });
 }
