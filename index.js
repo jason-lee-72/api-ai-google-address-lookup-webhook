@@ -19,7 +19,7 @@ function fireEvent(res, eventName, dataObj) {
 
 function lookupAddress(res, addressToLookup) {
   var googleMapsClient = require('@google/maps').createClient({
-    key: 'AIzaSyAsg_hoH1HVXONJhwUwR6f2fGZROJQwM1E'
+    key: require('./config/google-maps').api_key
   });
 
   googleMapsClient.geocode({
