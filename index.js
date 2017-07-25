@@ -21,12 +21,12 @@ function lookup(req, res) {
       res.json({
         "speech": response.json.results[0].formatted_address,
         "displayText": response.json.results[0].formatted_address,
-        "followupEvent": {
-          "name": "lookupComplete",
-          "data": {
-            "post-validation-address": response.json.results[0].formatted_address
-          }
-        }
+        // "followupEvent": {
+        //   "name": "lookupComplete",
+        //   "data": {
+        //     "post-validation-address": response.json.results[0].formatted_address
+        //   }
+        // }
       });
     } else {
       res.status(500);
