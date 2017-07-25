@@ -29,7 +29,7 @@ function lookup(req, res) {
     if (!err) {
       const validatedAddress = response.json.results[0].formatted_address;
       fireEvent(res,
-        'lookupComplete',
+        'lookup-complete',
         {
           "post-validation-address": response.json.results[0].formatted_address
         });
