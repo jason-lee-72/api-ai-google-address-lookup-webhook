@@ -14,7 +14,7 @@ function lookup(req, res) {
   });
 
   googleMapsClient.geocode({
-    address: req.body.result.parameters['pre-validation-address'];
+    address: req.body.result.parameters['pre-validation-address']
   }, function (err, response) {
 
     if (!err) {
