@@ -14,17 +14,26 @@ function lookup(req, res) {
   });
 
   googleMapsClient.geocode({
-    address: req.body.result.parameters.lookup
+    address: req.body.result.parameters['pre-validation-address'];
   }, function (err, response) {
 
     if (!err) {
       res.json({
         "speech": response.json.results[0].formatted_address,
-        "displayText": response.json.results[0].formatted_address
+        "displayText": response.json.results[0].formatted_address,
+        "contextOut": [
+          {
+            "name": "output-context",
+            "parameters": {
+              "post-validation-address": response.json.results[0].formatted_address
+            },
+            "lifespan": 5
+          }
+        ]
       });
     } else {
-       res.status(500);
-       res.send(err.json.error_message);
+      res.status(500);
+      res.send(err.json.error_message);
     }
   });
 }
