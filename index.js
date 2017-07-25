@@ -22,8 +22,6 @@ function lookupAddress(res, addressToLookup) {
     key: 'AIzaSyAsg_hoH1HVXONJhwUwR6f2fGZROJQwM1E'
   });
 
-  const addressToLookup = req.body.result.parameters['address-to-be-validated'];
-
   googleMapsClient.geocode({
     address: addressToLookup
   }, function (err, response) {
