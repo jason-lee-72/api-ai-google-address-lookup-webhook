@@ -29,13 +29,16 @@ function lookup(req, res) {
     if (!err) {
       const validatedAddress = response.json.results[0].formatted_address;
       fireEvent(res,
-        'lookup-complete',
+        'google-address-lookup-complete',
         {
           "post-validation-address": response.json.results[0].formatted_address
         });
     } else {
-      res.status(500);
-      res.send(err.json.error_message);
+      fireEvent(res,
+        'google-address-lookup-failed',
+        {
+          "message": res.json.message
+        });
     }
   });
 }
@@ -45,10 +48,10 @@ app.use('/webhook', (req, res) => {
   //response = "This is a sample response from your webhook! action is " + req.body.result.action;
 
   switch (req.body.result.action) {
-    case 'googleAddressLookup':
+    case 'google-address-lookup':
       lookup(req, res);
       break;
-    case 'fireEvent':
+    case 'fire-event':
       const eventName = req.body.result.parameters['event-name'];
       if (eventName) {
         fireEvent(res, eventName, {});
