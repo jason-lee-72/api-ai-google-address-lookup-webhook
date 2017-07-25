@@ -8,6 +8,15 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 
+function fireEvent(res, eventName, dataObj) {
+  res.json({
+    "followupEvent": {
+      "name": eventName,
+      "data": dataObj
+    }
+  });
+}
+
 function lookup(req, res) {
   var googleMapsClient = require('@google/maps').createClient({
     key: 'AIzaSyAsg_hoH1HVXONJhwUwR6f2fGZROJQwM1E'
@@ -19,15 +28,11 @@ function lookup(req, res) {
 
     if (!err) {
       const validatedAddress = response.json.results[0].formatted_address;
-
-      res.json({
-        "followupEvent": {
-          "name": "lookupComplete",
-          "data": {
-            "post-validation-address": response.json.results[0].formatted_address
-          }
-        }
-      });
+      fireEvent(res,
+        'lookupComplete',
+        {
+          "post-validation-address": response.json.results[0].formatted_address
+        });
     } else {
       res.status(500);
       res.send(err.json.error_message);
@@ -40,9 +45,15 @@ app.use('/webhook', (req, res) => {
   //response = "This is a sample response from your webhook! action is " + req.body.result.action;
 
   switch (req.body.result.action) {
-    case "googleAddressLookup":
+    case 'googleAddressLookup':
       lookup(req, res);
       break;
+    case 'fireEvent':
+      const eventName = req.body.result.parameters['event-name'];
+      if (eventName) {
+        fireEvent(res, eventName, {});
+        break;
+      }
     default:
       res.status(501);
       res.end();
