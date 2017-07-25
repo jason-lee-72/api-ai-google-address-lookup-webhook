@@ -17,21 +17,22 @@ function fireEvent(res, eventName, dataObj) {
   });
 }
 
-function lookup(req, res) {
+function lookupAddress(res, addressToLookup) {
   var googleMapsClient = require('@google/maps').createClient({
     key: 'AIzaSyAsg_hoH1HVXONJhwUwR6f2fGZROJQwM1E'
   });
 
-  googleMapsClient.geocode({
-    address: req.body.result.parameters['pre-validation-address']
-  }, function (err, response) {
+  const addressToLookup = req.body.result.parameters['address-to-be-validated'];
 
+  googleMapsClient.geocode({
+    address: addressToLookup
+  }, function (err, response) {
     if (!err) {
-      const validatedAddress = response.json.results[0].formatted_address;
+      const formattedAddress = response.json.results[0].formatted_address;
       fireEvent(res,
         'google-address-lookup-complete',
         {
-          "post-validation-address": response.json.results[0].formatted_address
+          "formatted-address": response.json.results[0].formatted_address
         });
     } else {
       fireEvent(res,
@@ -49,8 +50,11 @@ app.use('/webhook', (req, res) => {
 
   switch (req.body.result.action) {
     case 'google-address-lookup':
-      lookup(req, res);
-      break;
+      const addressToLookup = req.body.result.parameters['address-to-lookup'];
+      if (addressToLookup) {
+        lookupAddress(res, addressToLookup);
+        break;
+      }
     case 'fire-event':
       const eventName = req.body.result.parameters['event-name'];
       if (eventName) {
